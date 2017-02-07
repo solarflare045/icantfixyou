@@ -58,7 +58,7 @@ export class SharedValue<T> extends SharedNode {
 
   constructor(path: string, af: AngularFire) {
     super(path, af);
-    this._subject = Observable.defer(() => this._node)
+    this._subject = Observable.from(this._node)
       .map((obj) => ('$value' in obj) ? (<any>obj).$value : obj);
   }
 
@@ -87,7 +87,7 @@ export class SharedList extends SharedNode {
   constructor(path: string, af: AngularFire, query: Query = null) {
     super(path, af);
     this._list$ = this.af.database.list(path, { query });
-    this._subject$ = Observable.defer(() => this._list$)
+    this._subject$ = Observable.from(this._list$)
       .scan<SharedObjectRef[]>(
         (old: SharedObjectRef[], value: any[]) =>
           _.map(value, (obj) => {
@@ -132,7 +132,7 @@ export class SharedBuilder<T> {
         nodes.length
           ? Observable.combineLatest( _.map(nodes, (node) => this.fact$(node)) )
           : Observable.of([])
-      )
+      );
   }
 
   private fact$(node: SharedNode): Observable<T> {
@@ -150,7 +150,11 @@ export class SharedBuilder<T> {
     return new SharedBuilder<T>(
       (node) => node.root().child(collection),
       (node) => node.child(typePath).asValue<string>().value$
-        .map((type) => new (constructors[type])(node))
-    )
+        .map((type) => {
+          let constructor = constructors[type];
+          if (constructor) return new constructor(node);
+          throw new Error(`Type ${ type } not recognized at path ${ node.path }`);
+        })
+    );
   }
 }
