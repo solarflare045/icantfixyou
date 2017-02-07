@@ -1,92 +1,59 @@
 {
   "rules": {
-    ".read": "root.child('users').child(auth.uid).child('admin').val() === true",
-    ".write": "root.child('users').child(auth.uid).child('admin').val() === true",
+    ".read": "true || root.child('objects').child(auth.uid).child('admin').val() === true",
+    ".write": "root.child('objects').child(auth.uid).child('admin').val() === true",
     
-  	"games": {
-      "$game": {
-        ".read": true,
-        
-      	"locations": {
-        	"$game_location": { ".validate": "newData.isBoolean()" }
+    "objects": {
+      ".indexOn": ["game", "type"],
+      "$object": {
+        ".read": "$object === auth.uid || data.child('game').val() === root.child('objects').child(auth.uid).child('game').val()",
+          
+        "name": { ".validate": "newData.isString()" },
+        "type": { ".validate": "newData.val() === 'location' || newData.val() === 'user'" },
+        "game": {
+          ".validate": "root.child('games').child(newData.val()).exists()"
         },
-        "users": {
-          "$game_users": { ".validate": "newData.isBoolean()" }
-        },
-        "events": {
-          "$game_event": { ".validate": "newData.isBoolean()" }
-        }
+          
+        "admin": { ".validate": "newData.isBoolean()" },
+        "target": { ".validate": "!newData.exists() || root.child('objects').child(newData.val()).child('game').val() === root.child('objects').child(auth.uid).child('game').val()" }
       }
     },
-    "locations": {
-      "$location": {
+      
+    "games": {},
+      
+    "ailments": {
+      ".indexOn": "object",
+      "$ailment": {
         ".read": true,
           
-        "id": { ".validate": "newData.isString()" },
-        "status": { ".validate": "newData.isString()" },
-        "timeout": { ".validate": "newData.isNumber()" },
-        "malfunctions": {
-          "$location_malfunction": { ".validate": "newData.isBoolean()" }
-        }
+      	"object": { ".validate": "root.child('objects').child(newData.val()).exists()" }
       }
     },
-    "malfunctions": {
-      "$malfunction": {
-        ".read": true,
-        
-        "id": { ".validate": "newData.isString()" },
-        "location": { ".validate": "root.child('locations').child(newData.val()).exists()" },
-        "repairs": {
-          "$malfunction_repairer": {
-            ".write": "$malfunction_repairer === auth.uid",
-            ".validate": "newData.isBoolean()"
-          }
-        }
-      }
-    },
-    "illnesses": {
-      "$illness": {
-        ".read": true,
-          
-        "id": { ".validate": "newData.isString()" },
-        "user": { ".validate": "root.child('users').child(newData.val()).exists()" },
-        "repairs": {
-          "$illness_repairer": {
-            ".write": "$illness_repairer === auth.uid",
-            ".validate": "newData.isBoolean()"
-          }
-        }
-      }
-    },
+      
     "events": {
+      ".indexOn": "game",
       "$event": {
         ".read": true,
           
-        "id": { ".validate": "newData.isString()" },
-        "timeout": { ".validate": "newData.isNumber()" }
+        "game": { ".validate": "root.child('games').child(newData.val()).exists()" }
       }
     },
-    "users": {
-      "$user": {
-        ".read": "$user === auth.uid",
-        
-        "admin": { ".validate": "newData.isBoolean()" },
-        "player": {
-          ".read": "root.child('games').child(data.child('game').val()).child('users').child(auth.uid).val() === true",
-            
-          "name": { ".validate": "newData.isString()" },
-	        "game": { ".validate": "!newData.exists() || root.child('games').child(newData.val()).exists()" },
-          "connection": {
-            ".validate": "!newData.exists() || root.child('games').child(newData.parent().child('game').val()).child(newData.child('type').val()).child(newData.child('uid').val()).exists()",
-            
-            "type": {},
-            "uid": {}
-          },
-          "location": { ".validate": "!newData.exists() || root.child('games').child(newData.parent().child('game').val()).child('locations').val() === true" },
-          "illnesses": {
-            "$user_illness": { ".validate": "newData.isBoolean()" }
-          }
-        }
+      
+    "items": {
+      ".indexOn": "object",
+      "$item": {
+        ".read": true,
+          
+        "object": { ".validate": "root.child('objects').child(newData.val()).exists()" }
+      }
+    },
+      
+    "jobs": {
+      ".indexOn": "object",
+      "$job": {
+        ".read": "data.child('object').val() === auth.uid",
+        ".write": "!data.exists()",
+        ".validate": "newData.child('object').val() === auth.uid"
       }
     }
   }
