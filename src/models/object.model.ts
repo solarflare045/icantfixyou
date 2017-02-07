@@ -1,25 +1,32 @@
 import { Observable } from 'rxjs';
 import { SharedNode, SharedValue, SharedBuilder } from '../providers/shared/shared';
 import { Game, GameHelper } from './game.model';
+import { Ailment, AilmentHelper } from './ailment.model';
 import { Item, ItemHelper } from './item.model';
-import _ from 'lodash';
+import { Job, JobHelper } from './job.model';
 
 export abstract class GameObject {
   protected _name: SharedValue<string>;
   protected _gameId: SharedValue<string>;
   protected _game$: Observable<Game>;
+  protected _ailments$: Observable<Ailment[]>;
   protected _items$: Observable<Item[]>;
+  protected _jobs$: Observable<Job[]>;
 
   constructor(protected _node: SharedNode) {
     this._name = this._node.child('name').asValue<string>();
     this._gameId = this._node.child('game').asValue<string>();
     this._game$ = GameHelper.ref$(this._node, this._gameId.value$);
+    this._ailments$ = AilmentHelper.items$(_node, _node.key$, 'object');
     this._items$ = ItemHelper.items$(_node, _node.key$, 'object');
+    this._jobs$ = JobHelper.items$(_node, _node.key$, 'object');
   }
 
   get name$(): Observable<string> { return this._name.value$; }
   get game$(): Observable<Game> { return this._game$; }
+  get ailments$(): Observable<Ailment[]> { return this._ailments$; }
   get items$(): Observable<Item[]> { return this._items$; }
+  get jobs$(): Observable<Job[]> { return this._jobs$; }
 }
 
 export class Location extends GameObject {
