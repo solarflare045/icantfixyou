@@ -15,8 +15,6 @@ export abstract class GameObject {
     this._gameId = this._node.child('game').asValue<string>();
     this._game$ = GameHelper.ref$(this._node, this._gameId.value$);
     this._items$ = ItemHelper.items$(_node, _node.key$, 'object');
-
-    console.log('Registering to', this._node.path);
   }
 
   get name$(): Observable<string> { return this._name.value$; }
