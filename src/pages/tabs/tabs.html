@@ -1,5 +1,6 @@
-<ion-tabs>
-  <ion-tab [root]="tab1Root" tabTitle="Home" tabIcon="home"></ion-tab>
-  <ion-tab [root]="tab2Root" tabTitle="About" tabIcon="information-circle"></ion-tab>
-  <ion-tab [root]="tab3Root" tabTitle="Contact" tabIcon="contacts"></ion-tab>
+<ion-tabs color="dark" tabsLayout="icon-bottom" tabsHighlight="true">
+  <ion-tab [root]="tab1Root" tabPathUrl="terminal"      tabTitle="Term"       tabIcon="construct">          </ion-tab>
+  <ion-tab [root]="tab2Root" tabPathUrl="communication" tabTitle="Comms"      tabIcon="wifi">               </ion-tab>
+  <ion-tab [root]="tab3Root" tabPathUrl="objectives"    tabTitle="Mission"    tabIcon="information-circle"> </ion-tab>
+  <ion-tab [root]="tab4Root" tabPathUrl="personal"      tabTitle="Personal"   tabIcon="person">             </ion-tab>
 </ion-tabs>

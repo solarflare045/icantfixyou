@@ -6,12 +6,27 @@ import _ from 'lodash';
 
 @Injectable()
 export class SharedProvider {
-  public readonly auth: Observable<FirebaseAuthState>;
+  public readonly auth$: Observable<FirebaseAuthState>;
+  public readonly uid$: Observable<string>;
   public readonly root: SharedNode;
 
   constructor(private af: AngularFire) {
-    this.auth = this.af.auth;
     this.root = new SharedNode('', this.af);
+
+    this.auth$ = this.af.auth;
+    this.uid$ = this.auth$.map((auth) =>
+      (auth && auth.uid)
+        ? auth.uid
+        : null
+    );
+  }
+
+  login(): firebase.Promise<FirebaseAuthState> {
+    return this.af.auth.login();
+  }
+
+  logout(): firebase.Promise<void> {
+    return this.af.auth.logout();
   }
 }
 
@@ -80,12 +95,12 @@ interface SharedObjectRef {
   object: SharedNode;
 }
 
-export class SharedList extends SharedNode {
+export class SharedList /* extends SharedNode */ {
   protected _list$: FirebaseListObservable<any[]>;
   protected _subject$: Observable<SharedNode[]>;
 
-  constructor(path: string, af: AngularFire, query: Query = null) {
-    super(path, af);
+  constructor(protected path: string, protected af: AngularFire, query: Query = null) {
+    // super(path, af);
     this._list$ = this.af.database.list(path, { query });
     this._subject$ = Observable.from(this._list$)
       .scan<SharedObjectRef[]>(
@@ -98,6 +113,10 @@ export class SharedList extends SharedNode {
         , [])
       .distinctUntilChanged((x, y) => _.isEqual(_.map(x, 'keys'), _.map(y, 'keys')))
       .map((objs) => _.map(objs, (obj) => obj.object));
+  }
+
+  private child(path: string): SharedNode {
+    return new SharedNode(`${ this.path }/${ path }`, this.af);
   }
 
   get items$(): Observable<SharedNode[]> {
@@ -139,13 +158,6 @@ export class SharedBuilder<T> {
     return node ? this.factory$(node) : Observable.of(null);
   }
 
-  static single<T>(collection: string, constructor: new (node: SharedNode) => T): SharedBuilder<T> {
-    return new SharedBuilder<T>(
-      (node) => node.root().child(collection),
-      (node) => Observable.of(new constructor(node))
-    );
-  }
-
   static multiplex<T>(collection: string, typePath: string, constructors: { [type: string]: new (node: SharedNode) => T}): SharedBuilder<T> {
     return new SharedBuilder<T>(
       (node) => node.root().child(collection),
@@ -155,6 +167,30 @@ export class SharedBuilder<T> {
           if (constructor) return new constructor(node);
           throw new Error(`Type ${ type } not recognized at path ${ node.path }`);
         })
+    );
+  }
+}
+
+export class SharedSingleBuilder<T> extends SharedBuilder<T> {
+  constructor(
+    root: (anyNode: SharedNode) => SharedNode,
+    protected factory: (node: SharedNode) => T
+  ) {
+    super(root, (node) => Observable.of(this.fact(node)));
+  }
+
+  ref(node: SharedNode, id: string): T {
+    return this.fact(this.root(node).child(id));
+  }
+
+  private fact(node: SharedNode): T {
+    return node ? this.factory(node) : null;
+  }
+
+  static single<T>(collection: string, constructor: new (node: SharedNode) => T): SharedSingleBuilder<T> {
+    return new SharedSingleBuilder<T>(
+      (node) => node.root().child(collection),
+      (node) => new constructor(node)
     );
   }
 }

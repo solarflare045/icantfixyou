@@ -27,6 +27,9 @@ export abstract class GameObject {
   get ailments$(): Observable<Ailment[]> { return this._ailments$; }
   get items$(): Observable<Item[]> { return this._items$; }
   get jobs$(): Observable<Job[]> { return this._jobs$; }
+
+  setGame(id: string) { return this._gameId.update(id); }
+  setName(name: string) { return this._name.update(name); }
 }
 
 export class Location extends GameObject {

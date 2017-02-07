@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { SharedNode, SharedValue, SharedBuilder } from '../providers/shared/shared';
+import { SharedNode, SharedValue, SharedSingleBuilder } from '../providers/shared/shared';
 import { GameObject, GameObjectHelper } from './object.model';
 
 export class Ailment {
@@ -17,4 +17,4 @@ export class Ailment {
   get object$(): Observable<GameObject> { return this._object$; }
 }
 
-export var AilmentHelper = SharedBuilder.single('ailments', Ailment);
+export var AilmentHelper = SharedSingleBuilder.single('ailments', Ailment);

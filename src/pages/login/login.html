@@ -1,0 +1,35 @@
+<ion-content class="login-content" padding>
+  <ion-row class="logo-row">
+    <ion-col></ion-col>
+    <ion-col width-67>
+      <img src="http://placehold.it/300x200" />
+    </ion-col>
+    <ion-col></ion-col>
+  </ion-row>
+
+  <div class="login-box">
+    <form (ngSubmit)="connect()" #loginForm="ngForm">
+      <ion-row>
+        <ion-col class="signup-col">
+          <button ion-button class="submit-btn" full type="button" [disabled]="loggedIn$ | async" (click)="login()">Login</button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-list inset>
+            <ion-item>
+              <ion-input type="text" placeholder="Game ID" name="gameid" [disabled]="!(loggedIn$ | async)" [(ngModel)]="gameid" required></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input type="text" placeholder="Name" name="name" [disabled]="!(loggedIn$ | async)" [(ngModel)]="name" required></ion-input>
+            </ion-item>
+            <div class="signup-col">
+              <button ion-button class="submit-btn" full type="submit" [disabled]="!(loggedIn$ | async)">Connect</button>
+            </div>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+    </form>
+  </div>
+</ion-content>

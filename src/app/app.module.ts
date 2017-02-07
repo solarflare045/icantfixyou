@@ -1,16 +1,14 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
-import { AngularFireModule, FirebaseAppConfig } from 'angularfire2';
+import { AngularFireModule, FirebaseAppConfig, AuthProviders, AuthMethods } from 'angularfire2';
 
-import { AboutPage } from '../pages/about/about';
-import { ContactPage } from '../pages/contact/contact';
-import { HomePage } from '../pages/home/home';
-import { TabsPage } from '../pages/tabs/tabs';
+import { deepLinkConfig, componentsConfig } from './routes';
 
+import { SessionProvider } from '../providers/session/session';
 import { SharedProvider } from '../providers/shared/shared';
 
-export const firebaseConfig: FirebaseAppConfig = {
+const firebaseConfig: FirebaseAppConfig = {
   apiKey: 'AIzaSyBO2M1YoMd4GEqn68qq6lmQ2hC7UwdSyqI',
   authDomain: 'icantfixyou-e82f6.firebaseapp.com',
   databaseURL: 'https://icantfixyou-e82f6.firebaseio.com',
@@ -18,28 +16,28 @@ export const firebaseConfig: FirebaseAppConfig = {
   messagingSenderId: '266599518181'
 }
 
+const firebaseAuth = {
+  provider: AuthProviders.Google,
+  method: AuthMethods.Popup,
+}
+
 @NgModule({
   declarations: [
     MyApp,
-    AboutPage,
-    ContactPage,
-    HomePage,
-    TabsPage
+    ...componentsConfig,
   ],
   imports: [
-    IonicModule.forRoot(MyApp),
-    AngularFireModule.initializeApp(firebaseConfig)
+    IonicModule.forRoot(MyApp, {}, deepLinkConfig),
+    AngularFireModule.initializeApp(firebaseConfig, firebaseAuth),
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    AboutPage,
-    ContactPage,
-    HomePage,
-    TabsPage
+    ...componentsConfig,
   ],
   providers: [
     SharedProvider,
+    SessionProvider,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
