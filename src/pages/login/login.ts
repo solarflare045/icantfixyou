@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 import { Observable, Subscription } from 'rxjs';
 
 import { SessionProvider } from '../../providers/session/session';
@@ -19,6 +19,7 @@ export class LoginPage {
 
   constructor(
     private nav: NavController,
+    private params: NavParams,
     private sessionProvider: SessionProvider,
     private sharedProvider: SharedProvider,
   ) {

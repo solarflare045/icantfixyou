@@ -1,22 +1,29 @@
 import { Observable } from 'rxjs';
 import { SharedNode, SharedValue, SharedSingleBuilder } from '../providers/shared/shared';
-import { GameObject, GameObjectHelper } from './object.model';
+import { GameObject, Location, User, GameObjectHelper } from './object.model';
 import { Event, EventHelper } from './event.model';
+import _ from 'lodash';
 
 export class Game {
   protected _name: SharedValue<string>;
   protected _objects$: Observable<GameObject[]>;
   protected _events$: Observable<Event[]>;
+  protected _locations$: Observable<Location[]>;
+  protected _users$: Observable<User[]>;
 
   constructor(protected _node: SharedNode) {
     this._name = this._node.child('name').asValue<string>();
     this._objects$ = GameObjectHelper.items$(_node, _node.key$, 'game');
     this._events$ = EventHelper.items$(_node, _node.key$, 'game');
+    this._locations$ = this._objects$.map((objects) => <any[]>_.filter(objects, (object) => object instanceof Location));
+    this._users$ = this._objects$.map((objects) => <any[]>_.filter(objects, (object) => object instanceof User));
   }
 
   get name$(): Observable<string> { return this._name.value$; }
   get events$(): Observable<Event[]> { return this._events$; }
-  get objects$(): Observable<GameObject[]> { return this._objects$; }
+  // get objects$(): Observable<GameObject[]> { return this._objects$; }
+  get locations$(): Observable<Location[]> { return this._locations$; }
+  get users$(): Observable<User[]> { return this._users$; }
 }
 
 export var GameHelper = SharedSingleBuilder.single('games', Game);

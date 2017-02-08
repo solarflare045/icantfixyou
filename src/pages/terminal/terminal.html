@@ -4,6 +4,14 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
+  <ion-list>
+    <ion-list-header>
+      Locations
+    </ion-list-header>
 
+    <ion-item detail-push *ngFor="let location of locations$ | async" (click)="select(location)">
+      {{ location.name$ | async }}
+    </ion-item>
+  </ion-list>
 </ion-content>
