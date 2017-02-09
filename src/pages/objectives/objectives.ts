@@ -4,7 +4,7 @@ import { NavController } from 'ionic-angular';
 
 @Component({
   selector: 'page-objectives',
-  templateUrl: 'objectives.html'
+  templateUrl: 'objectives.html',
 })
 export class ObjectivesPage {
   constructor(public navCtrl: NavController) {

@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
+  <ion-list *ngIf="!(connected$ | async)">
     <ion-list-header>
       Locations (DEBUG LIST)
     </ion-list-header>
@@ -14,4 +14,17 @@
       {{ location.name$ | async }}
     </ion-item>
   </ion-list>
+
+  <location *ngIf="!!(location$ | async)" [location]="location$ | async">
+
+  </location>
 </ion-content>
+
+<ion-footer no-border>
+  <ion-toolbar>
+    <button ion-button large full block color="danger" (click)="disconnect()" *ngIf="(connected$ | async)">
+      <ion-label>Disconnect</ion-label>
+      <ion-icon item-right name="close"></ion-icon>
+    </button>
+  </ion-toolbar>
+</ion-footer>

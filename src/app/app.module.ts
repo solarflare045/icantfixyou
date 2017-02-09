@@ -13,13 +13,13 @@ const firebaseConfig: FirebaseAppConfig = {
   authDomain: 'icantfixyou-e82f6.firebaseapp.com',
   databaseURL: 'https://icantfixyou-e82f6.firebaseio.com',
   storageBucket: 'icantfixyou-e82f6.appspot.com',
-  messagingSenderId: '266599518181'
-}
+  messagingSenderId: '266599518181',
+};
 
 const firebaseAuth = {
   provider: AuthProviders.Google,
   method: AuthMethods.Popup,
-}
+};
 
 @NgModule({
   declarations: [
@@ -30,7 +30,7 @@ const firebaseAuth = {
     IonicModule.forRoot(MyApp, {}, deepLinkConfig),
     AngularFireModule.initializeApp(firebaseConfig, firebaseAuth),
   ],
-  bootstrap: [IonicApp],
+  bootstrap: [ IonicApp ],
   entryComponents: [
     MyApp,
     ...componentsConfig,
@@ -38,7 +38,7 @@ const firebaseAuth = {
   providers: [
     SharedProvider,
     SessionProvider,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
-  ]
+    { provide: ErrorHandler, useClass: IonicErrorHandler },
+  ],
 })
 export class AppModule {}

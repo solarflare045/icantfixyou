@@ -1,32 +1,33 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { NavController } from 'ionic-angular';
-import _ from 'lodash';
 
-import { AngularFire } from 'angularfire2';
-import { SessionProvider } from '../../providers/session/session';
-import { SharedProvider } from '../../providers/shared/shared';
+import { LocationComponent } from './location/location';
 
-import { LocationPage } from '../location/location';
-
-import { Game, GAME_HELPER } from '../../models/game.model';
-import { Location } from '../../models/object.model';
+import { Game, Location, GameObject, User } from '../../models/models';
 
 @Component({
   selector: 'page-terminal',
-  templateUrl: 'terminal.html'
+  templateUrl: 'terminal.html',
+  providers: [ LocationComponent ],
 })
 export class TerminalPage {
-  game$: Observable<Game>;
+  connected$: Observable<boolean>;
+  location$: Observable<Location>;
   locations$: Observable<Location[]>;
+  target$: Observable<GameObject>;
 
-  constructor(public navCtrl: NavController, private sessionProvider: SessionProvider, private sharedProvider: SharedProvider, private af: AngularFire) {
-    this.game$ = this.sessionProvider.myGame$;
-    this.locations$ = this.game$.switchMap((game) => game.locations$);
+  constructor(private game: Game, private user: User) {
+    this.locations$ = this.game.locations$;
+    this.target$ = this.user.target$;
+    this.connected$ = this.target$.map((target) => !!target);
+    this.location$ = this.target$.map((target) => (target instanceof Location) ? <Location>target : null);
   }
 
   select(location: Location) {
-    this.sessionProvider.myObject$.first().subscribe((user) => user.setTarget(location.id));
-    this.navCtrl.push(LocationPage, { location });
+    this.user.setTarget(location.id);
+  }
+
+  disconnect() {
+    this.user.setTarget(null);
   }
 }

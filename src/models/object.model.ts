@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { SharedNode, SharedValue, SharedBuilder } from '../providers/shared/shared';
+import { SharedNode, SharedValue, SharedBuilder, SharedSingleBuilder } from '../providers/shared/shared';
 import { Game, GAME_HELPER } from './game.model';
 import { Ailment, AILMENT_HELPER } from './ailment.model';
 import { Item, ITEM_HELPER } from './item.model';
@@ -12,6 +12,7 @@ export abstract class GameObject {
   protected _ailments$: Observable<Ailment[]>;
   protected _items$: Observable<Item[]>;
   protected _jobs$: Observable<Job[]>;
+  protected _targeters$: Observable<User[]>;
 
   constructor(protected _node: SharedNode) {
     this._name = this._node.child('name').asValue<string>();
@@ -20,6 +21,7 @@ export abstract class GameObject {
     this._ailments$ = AILMENT_HELPER.items$(_node, _node.key$, 'object');
     this._items$ = ITEM_HELPER.items$(_node, _node.key$, 'object');
     this._jobs$ = JOB_HELPER.items$(_node, _node.key$, 'object');
+    this._targeters$ = USER_HELPER.items$(_node, _node.key$, 'target');
   }
 
   get id(): string { return this._node.key; }
@@ -28,6 +30,7 @@ export abstract class GameObject {
   get ailments$(): Observable<Ailment[]> { return this._ailments$; }
   get items$(): Observable<Item[]> { return this._items$; }
   get jobs$(): Observable<Job[]> { return this._jobs$; }
+  get targeters$(): Observable<User[]> { return this._targeters$; }
 
   setGame(id: string) { return this._gameId.update(id); }
   setName(name: string) { return this._name.update(name); }
@@ -56,3 +59,6 @@ export const OBJECT_HELPER = SharedBuilder.multiplex<GameObject>('objects', 'typ
   user: User,
   location: Location,
 });
+
+export const LOCATION_HELPER = SharedSingleBuilder.single<Location>('objects', Location);
+export const USER_HELPER = SharedSingleBuilder.single<User>('objects', User);

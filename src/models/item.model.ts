@@ -1,7 +1,6 @@
 import { Observable } from 'rxjs';
 import { SharedNode, SharedValue, SharedSingleBuilder } from '../providers/shared/shared';
 import { GameObject, OBJECT_HELPER } from './object.model';
-import _ from 'lodash';
 
 export class Item {
   protected _name: SharedValue<string>;

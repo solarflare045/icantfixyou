@@ -19,6 +19,7 @@ export class Game {
     this._users$ = this._objects$.map((objects) => <any[]>_.filter(objects, (object) => object instanceof User));
   }
 
+  get id(): string { return this._node.key; }
   get name$(): Observable<string> { return this._name.value$; }
   get events$(): Observable<Event[]> { return this._events$; }
   // get objects$(): Observable<GameObject[]> { return this._objects$; }

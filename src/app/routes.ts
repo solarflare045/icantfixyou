@@ -8,16 +8,16 @@ import { CommunicationPage } from '../pages/communication/communication';
 import { ObjectivesPage } from '../pages/objectives/objectives';
 import { PersonalPage } from '../pages/personal/personal';
 
-import { LocationPage } from '../pages/location/location';
+import { LocationComponent } from '../pages/terminal/location/location';
 
 export const deepLinkConfig: DeepLinkConfig = {
   links: [
-    { component: TabsPage,                name: 'Tabs',             segment: 'tabs'           },
+    { component: TabsPage,                name: 'Tabs',             segment: 'tabs/:gid/:uid' },
 
     { component: LoginPage,               name: 'Login',            segment: 'login'          },
 
     { component: TerminalPage,            name: 'Terminal',         segment: 'terminal'       },
-    // { component: TerminalDetailPage,      name: 'Terminal Detail',  segment: 'terminal/:oid'  , defaultHistory: [ TerminalPage ]},
+    // { component: LocationPage,            name: 'Location',         segment: 'location/:lid'  , defaultHistory: [ TerminalPage ] },
 
     { component: CommunicationPage,       name: 'Communication',    segment: 'communication'  },
     { component: ObjectivesPage,          name: 'Objectives',       segment: 'objectives'     },
@@ -34,5 +34,5 @@ export const componentsConfig: any[] = [
   ObjectivesPage,
   PersonalPage,
   
-  LocationPage,
+  LocationComponent,
 ];

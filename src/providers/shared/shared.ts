@@ -80,7 +80,8 @@ export class SharedValue<T> extends SharedNode {
   constructor(path: string, af: AngularFire) {
     super(path, af);
     this._subject = Observable.from(this._node)
-      .map((obj) => ('$value' in obj) ? (<any>obj).$value : obj);
+      .map((obj) => ('$value' in obj) ? (<any>obj).$value : obj)
+      .publishReplay(1).refCount();
   }
 
   get value$(): Observable<T> {
@@ -144,7 +145,7 @@ export class SharedBuilder<T> {
 
   ref$(node: SharedNode, id: Observable<string>): Observable<T> {
     return this.root(node).childRef(id)
-      .switchMap((node) => this.fact$(node));
+      .switchMap((childNode) => this.fact$(childNode));
   }
 
   list(node: SharedNode, id: Observable<string>, key: string): SharedList {
@@ -155,9 +156,10 @@ export class SharedBuilder<T> {
     return this.list(node, id, key).items$
       .switchMap((nodes) =>
         nodes.length
-          ? Observable.combineLatest( _.map(nodes, (node) => this.fact$(node)) )
+          ? Observable.combineLatest( _.map(nodes, (childNode) => this.fact$(childNode)) )
           : Observable.of([])
-      );
+      )
+      .publishReplay(1).refCount();
   }
 
   private fact$(node: SharedNode): Observable<T> {

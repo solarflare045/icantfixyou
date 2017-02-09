@@ -4,7 +4,7 @@ import { NavController } from 'ionic-angular';
 
 @Component({
   selector: 'page-communication',
-  templateUrl: 'communication.html'
+  templateUrl: 'communication.html',
 })
 export class CommunicationPage {
   constructor(public navCtrl: NavController) {

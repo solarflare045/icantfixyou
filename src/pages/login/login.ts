@@ -27,9 +27,11 @@ export class LoginPage {
   }
 
   ionViewDidEnter() {
-    this.subscription = this.sessionProvider.myGame$
-      .filter((game) => !!game)
-      .do(() => this.nav.setRoot(TabsPage))
+    this.subscription = Observable.combineLatest(
+      this.sessionProvider.myObject$.filter((user) => !!user),
+      this.sessionProvider.myGame$.filter((game) => !!game),
+    )
+      .do(([ user, game ]) => this.nav.setRoot(TabsPage, { uid: user.id, gid: game.id }))
       .subscribe();
   }
 
