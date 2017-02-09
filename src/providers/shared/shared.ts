@@ -135,6 +135,12 @@ export class SharedList /* extends SharedNode */ {
   }
 }
 
+type ConstructorWithNode<T> = new (node: SharedNode) => T;
+interface ConstructorsWithNode<T> {
+  default?: ConstructorWithNode<T>;
+  [ key: string ]: ConstructorWithNode<T>;
+}
+
 export class SharedBuilder<T> {
   constructor(
     protected root: (anyNode: SharedNode) => SharedNode,
@@ -166,13 +172,14 @@ export class SharedBuilder<T> {
     return node ? this.factory$(node) : Observable.of(null);
   }
 
-  static multiplex<T>(collection: string, typePath: string, constructors: { [type: string]: new (node: SharedNode) => T}): SharedBuilder<T> {
+  static multiplex<T>(collection: string, typePath: string, constructors: ConstructorsWithNode<T>): SharedBuilder<T> {
     return new SharedBuilder<T>(
       (node) => node.root().child(collection),
       (node) => node.child(typePath).asValue<string>().value$
         .map((type) => {
           let constructor = constructors[type];
           if (constructor) return new constructor(node);
+          if (constructors.default) return new constructors.default(node);
           throw new Error(`Type ${ type } not recognized at path ${ node.path }`);
         })
     );
@@ -195,7 +202,7 @@ export class SharedSingleBuilder<T> extends SharedBuilder<T> {
     return node ? this.factory(node) : null;
   }
 
-  static single<T>(collection: string, constructor: new (node: SharedNode) => T): SharedSingleBuilder<T> {
+  static single<T>(collection: string, constructor: ConstructorWithNode<T>): SharedSingleBuilder<T> {
     return new SharedSingleBuilder<T>(
       (node) => node.root().child(collection),
       (node) => new constructor(node)

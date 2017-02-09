@@ -36,6 +36,10 @@ export abstract class GameObject {
   setName(name: string) { return this._name.update(name); }
 }
 
+export class UnknownObject extends GameObject {
+
+}
+
 export class Location extends GameObject {
   
 }
@@ -58,6 +62,7 @@ export class User extends GameObject {
 export const OBJECT_HELPER = SharedBuilder.multiplex<GameObject>('objects', 'type', {
   user: User,
   location: Location,
+  default: UnknownObject,
 });
 
 export const LOCATION_HELPER = SharedSingleBuilder.single<Location>('objects', Location);
