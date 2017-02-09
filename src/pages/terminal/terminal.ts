@@ -9,7 +9,7 @@ import { SharedProvider } from '../../providers/shared/shared';
 
 import { LocationPage } from '../location/location';
 
-import { Game, GameHelper } from '../../models/game.model';
+import { Game, GAME_HELPER } from '../../models/game.model';
 import { Location } from '../../models/object.model';
 
 @Component({
@@ -26,6 +26,7 @@ export class TerminalPage {
   }
 
   select(location: Location) {
+    this.sessionProvider.myObject$.first().subscribe((user) => user.setTarget(location.id));
     this.navCtrl.push(LocationPage, { location });
   }
 }

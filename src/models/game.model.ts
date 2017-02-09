@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { SharedNode, SharedValue, SharedSingleBuilder } from '../providers/shared/shared';
-import { GameObject, Location, User, GameObjectHelper } from './object.model';
-import { Event, EventHelper } from './event.model';
+import { GameObject, Location, User, OBJECT_HELPER } from './object.model';
+import { Event, EVENT_HELPER } from './event.model';
 import _ from 'lodash';
 
 export class Game {
@@ -13,8 +13,8 @@ export class Game {
 
   constructor(protected _node: SharedNode) {
     this._name = this._node.child('name').asValue<string>();
-    this._objects$ = GameObjectHelper.items$(_node, _node.key$, 'game');
-    this._events$ = EventHelper.items$(_node, _node.key$, 'game');
+    this._objects$ = OBJECT_HELPER.items$(_node, _node.key$, 'game');
+    this._events$ = EVENT_HELPER.items$(_node, _node.key$, 'game');
     this._locations$ = this._objects$.map((objects) => <any[]>_.filter(objects, (object) => object instanceof Location));
     this._users$ = this._objects$.map((objects) => <any[]>_.filter(objects, (object) => object instanceof User));
   }
@@ -26,4 +26,4 @@ export class Game {
   get users$(): Observable<User[]> { return this._users$; }
 }
 
-export var GameHelper = SharedSingleBuilder.single('games', Game);
+export const GAME_HELPER = SharedSingleBuilder.single('games', Game);

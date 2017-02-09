@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { SharedNode, SharedValue, SharedSingleBuilder } from '../providers/shared/shared';
-import { GameObject, GameObjectHelper } from './object.model';
+import { GameObject, OBJECT_HELPER } from './object.model';
 import _ from 'lodash';
 
 export class Item {
@@ -11,11 +11,11 @@ export class Item {
   constructor(protected _node: SharedNode) {
     this._name = this._node.child('name').asValue<string>();
     this._objectId = this._node.child('object').asValue<string>();
-    this._object$ = GameObjectHelper.ref$(this._node, this._objectId.value$);
+    this._object$ = OBJECT_HELPER.ref$(this._node, this._objectId.value$);
   }
   
   get name$(): Observable<string> { return this._name.value$; }
   get object$(): Observable<GameObject> { return this._object$; }
 }
 
-export var ItemHelper = SharedSingleBuilder.single('items', Item);
+export const ITEM_HELPER = SharedSingleBuilder.single('items', Item);

@@ -32,11 +32,13 @@ export class SharedProvider {
 
 export class SharedNode {
   protected _node: FirebaseObjectObservable<any>;
-  protected _key: Observable<string>;
+  protected _key: string;
+  protected _key$: Observable<string>;
 
   constructor(public readonly path: string, protected af: AngularFire) {
     this._node = this.af.database.object(this.path);
-    this._key = this._node.map((val) => val.$key);
+    this._key = _.last( path.split('/') );
+    this._key$ = this._node.map((val) => val.$key);
   }
 
   child(path: string): SharedNode {
@@ -51,8 +53,12 @@ export class SharedNode {
     return new SharedNode('', this.af);
   }
 
-  get key$(): Observable<string> {
+  get key(): string {
     return this._key;
+  }
+
+  get key$(): Observable<string> {
+    return this._key$;
   }
 
   asList(query: Query = null): SharedList {

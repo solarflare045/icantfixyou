@@ -1,12 +1,16 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { TerminalPage } from '../terminal/terminal';
 import { CommunicationPage } from '../communication/communication';
 import { ObjectivesPage } from '../objectives/objectives';
 import { PersonalPage } from '../personal/personal';
 
+import { SessionProvider } from '../../providers/session/session';
+import { Game } from '../../models/models';
+
 @Component({
-  templateUrl: 'tabs.html'
+  templateUrl: 'tabs.html',
 })
 export class TabsPage {
   // this tells the tabs component which Pages
@@ -16,7 +20,11 @@ export class TabsPage {
   tab3Root: any = ObjectivesPage;
   tab4Root: any = PersonalPage;
 
-  constructor() {
+  tabParams$: Observable<{ game: Game }>;
+  tab1Badge$: Observable<string>;
 
+  constructor(private sessionProvider: SessionProvider) {
+    this.tab1Badge$ = this.sessionProvider.myTarget$
+      .switchMap((target) => target ? target.name$ : Observable.of(null));
   }
 }
