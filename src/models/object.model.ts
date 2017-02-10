@@ -4,6 +4,7 @@ import { Game, GAME_HELPER } from './game.model';
 import { Ailment, AILMENT_HELPER } from './ailment.model';
 import { Item, ITEM_HELPER } from './item.model';
 import { Job, JOB_HELPER } from './job.model';
+import { Secret, SECRET_HELPER } from './secret.model';
 
 export abstract class GameObject {
   protected _name: SharedValue<string>;
@@ -53,6 +54,7 @@ export class Location extends GameObject {
 
 export class User extends GameObject {
   protected _targetId: SharedValue<string>;
+  protected _secret: Secret;
   protected _target$: Observable<GameObject>;
   protected _jobs$: Observable<Job[]>;
 
@@ -61,11 +63,14 @@ export class User extends GameObject {
     this._targetId = this._node.child('target').asValue<string>();
     this._target$ = OBJECT_HELPER.ref$(this._node, this._targetId.value$);
     this._jobs$ = JOB_HELPER.items$(_node, _node.key$, 'object');
+    this._secret = SECRET_HELPER.ref(_node, this._node.key);
   }
 
+  get secret$(): Observable<string> { return this._secret.secret$; }
   get target$(): Observable<GameObject> { return this._target$; }
   get jobs$(): Observable<Job[]> { return this._jobs$; }
 
+  setSecret(secret: string) { return this._secret.setSecret(secret); }
   setTarget(id: string) { return this._targetId.update(id); }
 }
 
