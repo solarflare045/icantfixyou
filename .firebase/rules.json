@@ -63,13 +63,13 @@
     },
       
     "jobs": {
-      ".indexOn": ["game", "object"],
+      ".indexOn": ["game", "user"],
       "$job": {
-        ".read": "data.child('object').val() === auth.uid",
+        ".read": "data.child('user').val() === auth.uid",
         ".write": "!data.exists()",
-        ".validate": "newData.hasChildren(['object'])",
+        ".validate": "newData.hasChildren(['user'])",
           
-        "object": { ".validate": "newData.val() === auth.uid" },
+        "user": { ".validate": "newData.val() === auth.uid" },
         "game": { ".validate": "root.child('games').child(newData.val()).exists()" }
       }
     },

@@ -62,7 +62,7 @@ export class User extends GameObject {
     super(_node);
     this._targetId = this._node.child('target').asValue<string>();
     this._target$ = OBJECT_HELPER.ref$(this._node, this._targetId.value$);
-    this._jobs$ = JOB_HELPER.items$(_node, _node.key$, 'object');
+    this._jobs$ = JOB_HELPER.items$(_node, _node.key$, 'user');
     this._secret = SECRET_HELPER.ref(_node, this._node.key);
   }
 
