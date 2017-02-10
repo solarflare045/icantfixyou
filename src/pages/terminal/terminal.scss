@@ -1,3 +1,10 @@
 page-terminal {
+    button.btn-disconnect {
+        border-radius: 30px !important;
+        box-shadow: none !important;
+    }
 
+    ion-toolbar.background-clear .toolbar-background {
+        display: none;
+    }
 }

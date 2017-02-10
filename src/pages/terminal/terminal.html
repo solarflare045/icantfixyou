@@ -32,8 +32,8 @@
 </ion-content>
 
 <ion-footer no-border>
-  <ion-toolbar>
-    <button ion-button large full block color="danger" (click)="disconnect()" *ngIf="(connected$ | async)">
+  <ion-toolbar class="background-clear">
+    <button ion-button large full block color="danger" class="btn-disconnect" @disconnectButton (click)="disconnect()" *ngIf="(connected$ | async)">
       <ion-label>Disconnect</ion-label>
       <ion-icon item-right name="close"></ion-icon>
     </button>
