@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, animate, state, style, transition, trigger } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { LocationComponent } from './location/location';
@@ -9,6 +9,15 @@ import { Game, Location, GameObject, User } from '../../models/models';
   selector: 'page-terminal',
   templateUrl: 'terminal.html',
   providers: [ LocationComponent ],
+  animations: [
+    trigger('disconnectButton', [
+      state('void', style({
+        opacity: 0.5,
+        transform: 'translate(0px, 75px)',
+      })),
+      transition('void <=> *', animate('350ms linear')),
+    ])
+  ]
 })
 export class TerminalPage {
   connected$: Observable<boolean>;
