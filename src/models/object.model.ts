@@ -41,7 +41,14 @@ export class UnknownObject extends GameObject {
 }
 
 export class Location extends GameObject {
+  protected _icon$: Observable<string>;
+
+  constructor(_node: SharedNode) {
+    super(_node);
+    this._icon$ = this.name$.map((name) => `/assets/locations/${ name.toLowerCase() }.svg`);
+  }
   
+  get icon$(): Observable<string> { return this._icon$; }
 }
 
 export class User extends GameObject {

@@ -4,6 +4,12 @@
 
 <ion-list>
   <ion-item>
+    <div *ngFor="let icon of [ location.icon$ | async ]">
+      <img class="icon" width=80 height=80 *ngIf="icon" [src]="icon" />
+    </div>
+  </ion-item>
+
+  <ion-item>
     <ion-label>
       Name
     </ion-label>
