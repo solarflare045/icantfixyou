@@ -12,7 +12,9 @@
       {{ location.name$ | async }}
     </div>
   </ion-item>
+</ion-list>
 
+<ion-list>
   <ion-item>
     <ion-label>
       Condition
@@ -22,4 +24,14 @@
       {{ location.health$ | async }}
     </ion-badge>
   </ion-item>
+</ion-list>
+
+<ion-list>
+  <ion-list-header>
+    Damage Report
+  </ion-list-header>
+
+  <ailment *ngFor="let ailment of location.ailments$ | async" [ailment]="ailment">
+
+  </ailment>
 </ion-list>

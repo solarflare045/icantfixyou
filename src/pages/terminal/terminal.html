@@ -11,13 +11,19 @@
     </ion-list-header>
 
     <ion-item detail-push *ngFor="let location of locations$ | async" (click)="select(location)">
-      {{ location.name$ | async }}
+      <ion-label>
+        {{ location.name$ | async }}
+      </ion-label>
+
+      <ion-badge item-content [color]="location.health$ | async">
+        {{ location.health$ | async }}
+      </ion-badge>
     </ion-item>
   </ion-list>
 
   <div *ngFor="let location of [ location$ | async ]">
     <location *ngIf="location" [location]="location">
-      
+
     </location>
   </div>
 

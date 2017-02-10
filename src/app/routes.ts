@@ -8,6 +8,7 @@ import { CommunicationPage } from '../pages/communication/communication';
 import { ObjectivesPage } from '../pages/objectives/objectives';
 import { PersonalPage } from '../pages/personal/personal';
 
+import { AilmentComponent } from '../pages/terminal/ailment/ailment';
 import { LocationComponent } from '../pages/terminal/location/location';
 
 export const deepLinkConfig: DeepLinkConfig = {
@@ -34,5 +35,6 @@ export const componentsConfig: any[] = [
   ObjectivesPage,
   PersonalPage,
   
+  AilmentComponent,
   LocationComponent,
 ];
