@@ -1,8 +1,8 @@
-<ion-list>
-  <ion-list-header>
-    Details
-  </ion-list-header>
+<ion-list-header>
+  Details
+</ion-list-header>
 
+<ion-list>
   <ion-item>
     <ion-label>
       Name
@@ -12,9 +12,7 @@
       {{ location.name$ | async }}
     </div>
   </ion-item>
-</ion-list>
 
-<ion-list>
   <ion-item>
     <ion-label>
       Condition
@@ -26,12 +24,17 @@
   </ion-item>
 </ion-list>
 
-<ion-list>
-  <ion-list-header>
-    Damage Report
-  </ion-list-header>
+<ion-list-header>
+  Damage Report
+</ion-list-header>
 
-  <ailment *ngFor="let ailment of location.ailments$ | async" [ailment]="ailment">
+<ion-list>
+  <ion-item *ngIf="!(ailments$ | async)">
+    <ion-spinner item-right></ion-spinner>
+    <ion-label>Analysing ...</ion-label>
+  </ion-item>
+
+  <ailment *ngFor="let ailment of ailments$ | async" [ailment]="ailment">
 
   </ailment>
 </ion-list>
