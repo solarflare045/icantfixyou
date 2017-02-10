@@ -14,11 +14,11 @@
     padding-bottom: 10px;
   }
 
-  ion-list > *:first-child {
+  ion-list > .item:first-child {
     border-top-left-radius: 30px !important;
   }
 
-  ion-list *:last-child {
+  ion-list .item:last-child {
     border-bottom-left-radius: 30px !important;
   }
 
