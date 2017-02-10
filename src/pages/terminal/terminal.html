@@ -15,9 +15,12 @@
     </ion-item>
   </ion-list>
 
-  <location *ngIf="!!(location$ | async)" [location]="location$ | async">
+  <div *ngFor="let location of [ location$ | async ]">
+    <location *ngIf="location" [location]="location">
+      
+    </location>
+  </div>
 
-  </location>
 </ion-content>
 
 <ion-footer no-border>

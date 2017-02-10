@@ -9,6 +9,7 @@ export abstract class GameObject {
   protected _name: SharedValue<string>;
   protected _gameId: SharedValue<string>;
   protected _game$: Observable<Game>;
+  protected _health$: SharedValue<string>;
   protected _ailments$: Observable<Ailment[]>;
   protected _items$: Observable<Item[]>;
   protected _jobs$: Observable<Job[]>;
@@ -17,6 +18,7 @@ export abstract class GameObject {
   constructor(protected _node: SharedNode) {
     this._name = this._node.child('name').asValue<string>();
     this._gameId = this._node.child('game').asValue<string>();
+    this._health$ = this._node.child('health').asValue<string>();
     this._game$ = GAME_HELPER.ref$(this._node, this._gameId.value$);
     this._ailments$ = AILMENT_HELPER.items$(_node, _node.key$, 'object');
     this._items$ = ITEM_HELPER.items$(_node, _node.key$, 'object');
@@ -27,6 +29,7 @@ export abstract class GameObject {
   get id(): string { return this._node.key; }
   get name$(): Observable<string> { return this._name.value$; }
   get game$(): Observable<Game> { return this._game$; }
+  get health$(): Observable<string> { return this._health$.value$; }
   get ailments$(): Observable<Ailment[]> { return this._ailments$; }
   get items$(): Observable<Item[]> { return this._items$; }
   get jobs$(): Observable<Job[]> { return this._jobs$; }

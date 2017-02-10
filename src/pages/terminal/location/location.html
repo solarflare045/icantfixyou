@@ -1,11 +1,25 @@
-<h2>Name: {{ location.name$ | async }}</h2>
-
-<ion-list-header>
-  Targeters
-</ion-list-header>
-
 <ion-list>
-  <ion-item *ngFor="let object of location.targeters$ | async">
-    {{ object.name$ | async }}
+  <ion-list-header>
+    Details
+  </ion-list-header>
+
+  <ion-item>
+    <ion-label>
+      Name
+    </ion-label>
+
+    <div item-content>
+      {{ location.name$ | async }}
+    </div>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>
+      Condition
+    </ion-label>
+
+    <ion-badge item-content [color]="location.health$ | async">
+      {{ location.health$ | async }}
+    </ion-badge>
   </ion-item>
 </ion-list>

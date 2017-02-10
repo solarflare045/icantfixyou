@@ -1,6 +1,6 @@
 <ion-tabs color="dark" tabsLayout="icon-right" tabsHighlight="true">
-  <ion-tab [root]="tab1Root" tabTitle="Term"       tabIcon="construct"           [tabBadge]="tab1Badge$ | async" ></ion-tab>
-  <ion-tab [root]="tab2Root" tabTitle="Comms"      tabIcon="wifi"                                                ></ion-tab>
-  <ion-tab [root]="tab3Root" tabTitle="Mission"    tabIcon="information-circle"                                  ></ion-tab>
-  <ion-tab [root]="tab4Root" tabTitle="Personal"   tabIcon="person"                                              ></ion-tab>
+  <ion-tab [root]="tab1Root" tabTitle="Term"     tabIcon="construct"           [tabBadge]="tab1Badge$ | async" [tabBadgeStyle]="tab1BadgeStyle$ | async"></ion-tab>
+  <ion-tab [root]="tab2Root" tabTitle="Comms"    tabIcon="wifi"                                                                                         ></ion-tab>
+  <ion-tab [root]="tab3Root" tabTitle="Mission"  tabIcon="information-circle"                                                                           ></ion-tab>
+  <ion-tab [root]="tab4Root" tabTitle="Personal" tabIcon="person"                                                                                       ></ion-tab>
 </ion-tabs>

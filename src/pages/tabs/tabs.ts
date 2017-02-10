@@ -30,6 +30,7 @@ export class TabsPage {
 
   tabParams: { gid: string, uid: string } = null;
   tab1Badge$: Observable<string>;
+  tab1BadgeStyle$: Observable<string>;
 
   readonly rootNode: SharedNode;
   readonly game: Game;
@@ -41,7 +42,7 @@ export class TabsPage {
     this.game = GAME_HELPER.ref(this.sharedProvider.root, this.nav.get('gid'));
     this.user = USER_HELPER.ref(this.sharedProvider.root, this.nav.get('uid'));
 
-    this.tab1Badge$ = this.user.target$
-      .switchMap((target) => target ? target.name$ : Observable.of(null));
+    this.tab1Badge$ = this.user.target$.switchMap((target) => target ? target.name$ : Observable.of(null));
+    this.tab1BadgeStyle$ = this.user.target$.switchMap((target) => target ? target.health$ : Observable.of(null));
   }
 }
