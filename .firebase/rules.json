@@ -1,59 +1,85 @@
 {
   "rules": {
-    ".read": "true || root.child('objects').child(auth.uid).child('admin').val() === true",
+    ".read": "root.child('objects').child(auth.uid).child('admin').val() === true",
     ".write": "root.child('objects').child(auth.uid).child('admin').val() === true",
     
     "objects": {
-      ".indexOn": ["game", "type"],
+      ".read": true,
+      ".indexOn": ["game", "type", "target"],
       "$object": {
         ".read": "$object === auth.uid || data.child('game').val() === root.child('objects').child(auth.uid).child('game').val()",
-          
-        "name": { ".validate": "newData.isString()" },
+      	
         "type": { ".validate": "newData.val() === 'location' || newData.val() === 'user'" },
+        "admin": { ".validate": "newData.isBoolean()" },
+          
+        "name": {
+          ".write": "$object === auth.uid",
+          ".validate": "newData.isString()"
+        },
+        
         "game": {
+					".write": "$object === auth.uid",
           ".validate": "root.child('games').child(newData.val()).exists()"
         },
           
-        "admin": { ".validate": "newData.isBoolean()" },
-        "target": { ".validate": "!newData.exists() || root.child('objects').child(newData.val()).child('game').val() === root.child('objects').child(auth.uid).child('game').val()" }
+        "target": {
+          ".write": "$object === auth.uid",
+          ".validate": "!newData.exists() || root.child('objects').child(newData.val()).child('game').val() === root.child('objects').child(auth.uid).child('game').val()"
+        }
       }
     },
       
-    "games": {},
+    "games": {
+      ".indexOn": ["owner"],
+      "$game": {
+        ".read": "$game === root.child('objects').child(auth.uid).child('game').val()",
+          
+        "owner": { ".validate": "root.child('objects').child(newData.val()).exists()" }
+      }
+    },
       
     "ailments": {
+      ".read": true,
       ".indexOn": "object",
-      "$ailment": {
-        ".read": true,
-          
+      "$ailment": {          
       	"object": { ".validate": "root.child('objects').child(newData.val()).exists()" }
       }
     },
       
     "events": {
+      ".read": true,
       ".indexOn": "game",
-      "$event": {
-        ".read": true,
-          
+      "$event": {          
         "game": { ".validate": "root.child('games').child(newData.val()).exists()" }
       }
     },
       
     "items": {
+      ".read": true,
       ".indexOn": "object",
-      "$item": {
-        ".read": true,
-          
+      "$item": {          
         "object": { ".validate": "root.child('objects').child(newData.val()).exists()" }
       }
     },
       
     "jobs": {
-      ".indexOn": "object",
+      ".indexOn": ["game", "user"],
       "$job": {
-        ".read": "data.child('object').val() === auth.uid",
+        ".read": "data.child('user').val() === auth.uid",
         ".write": "!data.exists()",
-        ".validate": "newData.child('object').val() === auth.uid"
+        ".validate": "newData.hasChildren(['user'])",
+          
+        "user": { ".validate": "newData.val() === auth.uid" },
+        "game": { ".validate": "root.child('games').child(newData.val()).exists()" }
+      }
+    },
+      
+    "secrets": {
+      ".indexOn": "secret",
+      "$object": {
+        ".read": "$object === auth.uid",
+        ".write": "$object === auth.uid",
+        "secret": { ".validate": "newData.exists()" }
       }
     }
   }
