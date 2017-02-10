@@ -12,7 +12,6 @@ export abstract class GameObject {
   protected _health$: SharedValue<string>;
   protected _ailments$: Observable<Ailment[]>;
   protected _items$: Observable<Item[]>;
-  protected _jobs$: Observable<Job[]>;
   protected _targeters$: Observable<User[]>;
 
   constructor(protected _node: SharedNode) {
@@ -22,7 +21,6 @@ export abstract class GameObject {
     this._game$ = GAME_HELPER.ref$(this._node, this._gameId.value$);
     this._ailments$ = AILMENT_HELPER.items$(_node, _node.key$, 'object');
     this._items$ = ITEM_HELPER.items$(_node, _node.key$, 'object');
-    this._jobs$ = JOB_HELPER.items$(_node, _node.key$, 'object');
     this._targeters$ = USER_HELPER.items$(_node, _node.key$, 'target');
   }
 
@@ -32,7 +30,6 @@ export abstract class GameObject {
   get health$(): Observable<string> { return this._health$.value$; }
   get ailments$(): Observable<Ailment[]> { return this._ailments$; }
   get items$(): Observable<Item[]> { return this._items$; }
-  get jobs$(): Observable<Job[]> { return this._jobs$; }
   get targeters$(): Observable<User[]> { return this._targeters$; }
 
   setGame(id: string) { return this._gameId.update(id); }
@@ -50,14 +47,17 @@ export class Location extends GameObject {
 export class User extends GameObject {
   protected _targetId: SharedValue<string>;
   protected _target$: Observable<GameObject>;
+  protected _jobs$: Observable<Job[]>;
 
   constructor(_node: SharedNode) {
     super(_node);
     this._targetId = this._node.child('target').asValue<string>();
     this._target$ = OBJECT_HELPER.ref$(this._node, this._targetId.value$);
+    this._jobs$ = JOB_HELPER.items$(_node, _node.key$, 'object');
   }
 
   get target$(): Observable<GameObject> { return this._target$; }
+  get jobs$(): Observable<Job[]> { return this._jobs$; }
 
   setTarget(id: string) { return this._targetId.update(id); }
 }
