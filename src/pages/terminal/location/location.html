@@ -1,46 +1,32 @@
-<ion-list-header>
-  Details
-</ion-list-header>
+ <div class="page-location" @contentSlide>
+  <ion-list>
+    <ion-item>
+      <ion-row class="icon-row">
+        <ion-col></ion-col>
+        <ion-col width-67>
+          <div *ngFor="let icon of [ location.icon$ | async ]">
+            <img class="icon" width=150 height=150 *ngIf="icon" [src]="icon" />
+          </div>
+        </ion-col>
+        <ion-col></ion-col>
+      </ion-row>
+    </ion-item>
+    <ion-list-header>{{ location.name$ | async }}</ion-list-header>
 
-<ion-list>
-  <ion-item>
-    <div *ngFor="let icon of [ location.icon$ | async ]">
-      <img class="icon" width=80 height=80 *ngIf="icon" [src]="icon" />
-    </div>
-  </ion-item>
+    <ion-item class="item-condition" [color]="location.health$ | async">{{ location.health$ | async }}</ion-item>
+  </ion-list>
 
-  <ion-item>
-    <ion-label>
-      Name
-    </ion-label>
+  <ion-list>
+    <ion-list-header>
+      Damage Report
+    </ion-list-header>
 
-    <div item-content>
-      {{ location.name$ | async }}
-    </div>
-  </ion-item>
+    <ion-item *ngIf="!(ailments$ | async)">
+      <ion-spinner item-right></ion-spinner>
+      <ion-label>Analysing ...</ion-label>
+    </ion-item>
 
-  <ion-item>
-    <ion-label>
-      Condition
-    </ion-label>
-
-    <ion-badge item-content [color]="location.health$ | async">
-      {{ location.health$ | async }}
-    </ion-badge>
-  </ion-item>
-</ion-list>
-
-<ion-list-header>
-  Damage Report
-</ion-list-header>
-
-<ion-list>
-  <ion-item *ngIf="!(ailments$ | async)">
-    <ion-spinner item-right></ion-spinner>
-    <ion-label>Analysing ...</ion-label>
-  </ion-item>
-
-  <ailment *ngFor="let ailment of ailments$ | async" [ailment]="ailment">
-
-  </ailment>
-</ion-list>
+    <ailment *ngFor="let ailment of ailments$ | async" [ailment]="ailment">
+    </ailment>
+  </ion-list>
+</div>
