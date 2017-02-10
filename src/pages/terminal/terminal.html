@@ -5,21 +5,23 @@
 </ion-header>
 
 <ion-content>
-  <ion-list *ngIf="!(connected$ | async)">
+  <div *ngIf="!(connected$ | async)">
     <ion-list-header>
       Locations (DEBUG LIST)
     </ion-list-header>
 
-    <ion-item detail-push *ngFor="let location of locations$ | async" (click)="select(location)">
-      <ion-label>
-        {{ location.name$ | async }}
-      </ion-label>
+    <ion-list>
+      <ion-item detail-push *ngFor="let location of locations$ | async" (click)="select(location)">
+        <ion-label>
+          {{ location.name$ | async }}
+        </ion-label>
 
-      <ion-badge item-content [color]="location.health$ | async">
-        {{ location.health$ | async }}
-      </ion-badge>
-    </ion-item>
-  </ion-list>
+        <ion-badge item-content [color]="location.health$ | async">
+          {{ location.health$ | async }}
+        </ion-badge>
+      </ion-item>
+    </ion-list>
+  </div>
 
   <div *ngFor="let location of [ location$ | async ]">
     <location *ngIf="location" [location]="location">
