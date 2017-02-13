@@ -12,10 +12,9 @@ import { Game, Location, GameObject, User } from '../../models/models';
   animations: [
     trigger('disconnectButton', [
       state('void', style({
-        opacity: 0.5,
-        transform: 'translate(0px, 75px)',
+        transform: 'translate(400px, 0px)',
       })),
-      transition('void <=> *', animate('350ms linear')),
+      transition('void <=> *', animate('400ms linear')),
     ])
   ]
 })

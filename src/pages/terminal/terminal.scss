@@ -1,11 +1,16 @@
 page-terminal {
     button.btn-disconnect {
-        border-radius: 30px !important;
-        border: 1px solid #ffffff;
+        border-top-left-radius: 30px !important;
+        border-bottom-left-radius: 30px !important;
         box-shadow: none !important;
     }
 
-    ion-toolbar.background-clear .toolbar-background {
-        display: none;
+    ion-toolbar.background-clear {
+        padding-right: 0px !important;
+        margin-left: 20px;
+
+        .toolbar-background {
+            display: none;
+        }
     }
 }
